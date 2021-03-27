@@ -73,6 +73,7 @@ class DBOpenHelper:
 				)
 			
 				"""
+			)
 			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS friends
 				(
@@ -80,33 +81,7 @@ class DBOpenHelper:
 				     f_name STRING NOT NULL
 				)
 			    """
-                        )
-			# cursor.execute("""
-			# 	CREATE TABLe IF NOT EXISTS achievements
-			# 	(
-			# 	  universe int not NULL,
-			# 	  universe_name varchar(20),
-			# 	  movements int not NULL,
-			# 	  movements_name varchar(20),
-			# 	  substance int not NULL,
-			# 	  substance_name varchar(20),
-			# 	  brain INT NOT NULL,
-			# 	  brain_name varchar(20),
-			# 	  energy INT NOT NULL,
-			# 	  energy_name varchar(20),
-			# 	  it int NOT NULL,
-			# 	  it_name varchar(20),
-			# 	  materials int not null,
-			# 	  materials_name varchar(20),
-			# 	  medicine int not null,
-			# 	  medicine_name varchar(20),
-			# 	  science int not null,
-			# 	  science_name varchar(20),
-			# 	  language int not null,
-			# 	  language_name varchar(20)
-			# 	  )
-			# 	  """
-			# )
+            )
 		except Exception as e:
 			print(e)
 			return None
@@ -121,7 +96,7 @@ class DBOpenHelper:
 			sql = "SELECT * FROM users WHERE email=?"
 			result = cursor.execute(sql, (email,))
 			user = result.fetchone()
-			if user != None:
+			if user is not None:
 				return User(*user)
 			return None
 		except Exception as e:
@@ -201,7 +176,7 @@ class DBOpenHelper:
 			sql = "SELECT * FROM users WHERE id=?"
 			result = cursor.execute(sql, (id,))
 			user = result.fetchone()
-			if user != None:
+			if user is not None:
 				return jsonify(user)
 			return None
 		except:

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, Response
 from database import *
+import time
 app = Flask(__name__)
 
 
@@ -31,7 +32,7 @@ def register():
 
     response = {}
     code = 0
-    if user != None:
+    if user is not None:
         response['msg'] = "User already exists"
         code = 403
     else:
@@ -44,7 +45,7 @@ def register():
             surname = request.args.get('surname')
             age = request.args.get('age')
             user = db_helper.insert_user(email, pwd, name, surname, age)
-            if user != None:
+            if user is not None:
                 response['result'] = user.json()
                 code = 200
             else:
@@ -53,7 +54,80 @@ def register():
     return jsonify(response), code
 
 
-    
+@app.route('/stat.click', methods=['POST', 'GET'])
+def paperClicked():
+    uid = request.args.get('uid')
+    p_id = request.args.get('p_id')
+    ts = int(time.time() * 1_000)
+    event_type = "click"
+    result = db_helper.register_stat(uid, p_id, ts, event_type)
+    response = {}
+    code = 0
+    if result:
+        response["response"] = 0
+        code = 200
+    else:
+        response["msg"] = "Internall Error"
+        code = 500
+    return jsonify(response), code
+
+
+@app.route('/stat.close', methods=['POST', 'GET'])
+def paperLeft():
+    uid = request.args.get('uid')
+    p_id = request.args.get('p_id')
+    ts = int(time.time() * 1_000)
+    event_type = "close"
+    result = db_helper.register_stat(uid, p_id, ts, event_type)
+    response = {}
+    code = 0
+    if result:
+        response["response"] = 0
+        code = 200
+    else:
+        response["msg"] = "Internall Error"
+        code = 500
+    return jsonify(response), code
+
+
+@app.route('/fave.add', methods=['POST', 'GET'])
+def faveAdd():
+    uid = request.args.get('uid')
+    p_id = request.args.get('p_id')
+    result = db_helper.add_to_fave(uid, p_id)
+    response = {}
+    code = 0
+    if result is not None:
+        if result:
+            code = 200
+            request["response"] = 1
+        else:
+            code = 409
+            response["msg"] = "Already in favs"
+    else:
+        code = 500
+        response["msg"] = "Internal Error"
+    return jsonify(response), code
+
+
+@app.route('/fave.remove', methods=['POST', 'GET'])
+def faveRemove():
+    uid = request.args.get('uid')
+    p_id = request.args.get('p_id')
+    result = db_helper.remove_from_favs(uid, p_id)
+    response = {}
+    code = 0
+    if result is not None:
+        if result:
+            code = 200
+            request["response"] = 1
+        else:
+            code = 404
+            response["msg"] = "Not in favs"
+    else:
+        code = 500
+        response["msg"] = "Internal Error"
+    return jsonify(response), code
 
 
 
