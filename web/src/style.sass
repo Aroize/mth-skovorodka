@@ -45,7 +45,127 @@ nav
     display: grid
     grid-template-columns: repeat(5, 1fr)
 
+// .darkness
+//     filter: brightness(40%)
+//     width: 100%
+//     height: 100%
+//     position: fixed
+
 .signup-form
-    background-color:
-    margin: 0px auto
-    width: 320px
+    background: $grey-5
+    margin: 20px auto
+    width: 600px
+    padding: 30px
+    border-radius: 15px
+    font-size: 30px
+    // outline: solid rgba(0, 0, 0, .3) 10000px
+
+    .label
+        width: 600px
+        height: 40px
+        border-radius: 15px
+        border: none
+        padding-left: 10px
+        font-size: 30px
+    p
+        font-size: 28px
+        line-height: 1.6
+    .checkbox
+        width: 30px
+        height: 30px
+    .box
+        display: grid
+        grid-template-columns: repeat(2, 1fr)
+        padding: 20px 0px
+    .header
+        margin: auto
+        width: 600px
+    button
+        border-radius: 25px
+        border: none
+        font-size: 1em
+        width: 250px
+        margin: 0 auto
+        cursor: pointer
+        outline: none
+        background-color: $grey-1
+        color: $grey-5
+        font-weight: 400
+        &:hover
+            background: linear-gradient(90deg, $green, $blue)
+
+.signin-form
+    background: $grey-5
+    margin: 20px auto
+    width: 600px
+    padding: 30px
+    border-radius: 15px
+    font-size: 30px
+    .label
+        width: 600px
+        height: 40px
+        border-radius: 15px
+        border: none
+        padding-left: 10px
+        font-size: 30px
+    p
+        font-size: 28px
+        line-height: 1.6
+    button
+        border-radius: 25px
+        border: none
+        font-size: 1em
+        width: 250px
+        margin: 30px auto 0px
+        cursor: pointer
+        outline: none
+        background-color: $grey-1
+        color: $grey-5
+        font-weight: 400
+        &:hover
+            background: linear-gradient(90deg, $green, $blue)
+
+.towards-wrapper
+    display: grid
+    grid-template-columns: repeat(3, 1fr)
+    // background: aqua
+    border-radius: 15px
+    max-width: 1200px
+    margin: 10px auto
+
+.toward
+    &-card
+        border-radius: 15px
+        background: $grey-5
+        padding: 15px
+        margin: 10px
+        display: flex
+    &-text
+        padding-left: 35px
+        display: flex
+        flex-direction: column
+        justify-content: space-around
+        h3
+            font-size: 25px
+
+.profile-card
+    border-radius: 15px
+    background: $grey-5
+    padding: 15px
+    margin: 10px auto
+    width: 900px
+    img
+        display: block
+        margin: auto
+    h2
+        text-align: center
+        font-size: 30px
+        margin: 20px
+    .tag
+        background: #da7
+        border-radius: 15px
+        margin: 10px
+        padding: 10px 15px
+    .tags
+        text-align: center
+        padding-bottom: 20px

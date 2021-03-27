@@ -1,29 +1,29 @@
 const levelToRgb = (lvl) => {
-    if (lvl == 0)
+    if (lvl === 0)
     return "a9a9a9"
-    if (lvl==1)
+    if (lvl===1)
      return "FB91A8"
-    if (lvl==2)
+    if (lvl===2)
      return "FB6B8A"
-    if (lvl==3)
+    if (lvl===3)
      return "F83A63"
-    if (lvl==4)
+    if (lvl===4)
      return "A11331"
-    if (lvl==5)
+    if (lvl===5)
      return "FFB994"
-    if (lvl==6)
+    if (lvl===6)
      return "FFA06D"
-    if (lvl==7)
+    if (lvl===7)
      return "FF803C"
-    if (lvl==8)
+    if (lvl===8)
      return "A64613"
-    if (lvl==9)
+    if (lvl===9)
      return "92BDEE"
-    if (lvl==10)
+    if (lvl===10)
      return "70ACEE"
-    if (lvl==11)
+    if (lvl===11)
      return "418BDD"
-    if (lvl==12)
+    if (lvl===12)
      return "154F90"
 }
 

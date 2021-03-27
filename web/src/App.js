@@ -5,6 +5,7 @@ import NavBar from './components/NavBar'
 import {Route, BrowserRouter } from "react-router-dom";
 import ArticlesRec from "./components/ArticlesRec";
 import Towards from './components/Towards'
+import Profile from './components/Profile'
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
     <Route path={'/signup'} component={SignUp} />
     <Route path={'/article'} component={Article} />
     <Route path={'/rec'} component={ArticlesRec} />
+    <Route path={'/profile'} component={Profile} />
   </BrowserRouter>
 
     </div>

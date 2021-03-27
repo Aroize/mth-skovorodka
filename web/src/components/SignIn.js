@@ -13,12 +13,11 @@ const SignIn = () => {
         }
     }
       >
-        <Form>
+        <Form class="signin-form">
           <p>E-mail:</p>
-          <Field name="email" type="email" placeholder=""/>
+          <Field class="label" name="email" type="email" placeholder=""/>
           <p>Password:</p>
-          <Field name="password" type="password" placeholder=""/>
-          <p></p>
+          <Field class="label" name="password" type="password" placeholder=""/>
           <button type="submit">Submit</button>
         </Form>
       </Formik>
