@@ -8,7 +8,6 @@ def doc_to_markdown(input_file,directory,out_directory):
     dirpath = Path(out_directory)
     if (dirpath.exists()==False):
         os.makedirs(dirpath)
-    print(dirpath)
     output_file = out_directory +"\\"+ input_file[:len(input_file)-4]
     with open(directory+"\\"+input_file, "rb") as docx_file:
         result = mammoth.convert_to_markdown(docx_file)
