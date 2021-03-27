@@ -71,8 +71,42 @@ class DBOpenHelper:
 					ts long NOT NULL,
 					type STRING
 				)
+			
 				"""
-			)
+			cursor.execute("""
+				CREATE TABLE IF NOT EXISTS friends
+				(
+				     f_id INTEGER NOT NULL,
+				     f_name STRING NOT NULL
+				)
+			    """
+                        )
+			# cursor.execute("""
+			# 	CREATE TABLe IF NOT EXISTS achievements
+			# 	(
+			# 	  universe int not NULL,
+			# 	  universe_name varchar(20),
+			# 	  movements int not NULL,
+			# 	  movements_name varchar(20),
+			# 	  substance int not NULL,
+			# 	  substance_name varchar(20),
+			# 	  brain INT NOT NULL,
+			# 	  brain_name varchar(20),
+			# 	  energy INT NOT NULL,
+			# 	  energy_name varchar(20),
+			# 	  it int NOT NULL,
+			# 	  it_name varchar(20),
+			# 	  materials int not null,
+			# 	  materials_name varchar(20),
+			# 	  medicine int not null,
+			# 	  medicine_name varchar(20),
+			# 	  science int not null,
+			# 	  science_name varchar(20),
+			# 	  language int not null,
+			# 	  language_name varchar(20)
+			# 	  )
+			# 	  """
+			# )
 		except Exception as e:
 			print(e)
 			return None
@@ -145,7 +179,6 @@ class DBOpenHelper:
 		finally:
 			cursor.close()
 
-
 	def remove_from_favs(self, uid, p_id):
 		cursor = self.db.cursor()
 		try:
@@ -162,7 +195,33 @@ class DBOpenHelper:
 			print(e)
 			return None
 
+	def find_user_by_id(self, id):
+		cursor = self.db.cursor()
+		try:
+			sql = "SELECT * FROM users WHERE id=?"
+			result = cursor.execute(sql, (id,))
+			user = result.fetchone()
+			if user != None:
+				return jsonify(user)
+			return None
+		except:
+			return None
+		finally:
+			cursor.close()
 
+	def add_user_to_friend(self,id):
+		cursor = self.db.cursor()
+		try:
+			sql = "SELECT *FROM users WHERE id=?"
+			name = cursor.execute(sql,(id,))
+			sql = "INSERT INTO friends(id, name) VALUES {}"
+			args = (id, name)
+			cursor.execute(sql.format(args))
+			self.db.commit()
+		except:
+			return None
+		finally:
+			cursor.close()
 		
 			
 
