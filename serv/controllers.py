@@ -62,6 +62,9 @@ class RegisterHandler(RequestHandler):
 		self.write(db_helper.get_user_by_email(email).json())
 
 
+class 
+
+
 
 
 		
