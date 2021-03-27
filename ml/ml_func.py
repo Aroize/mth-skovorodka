@@ -29,9 +29,3 @@ def _count_and_save_simm_matrix():
 
 def get_simm_matrix():
     return np.load("simm_matrix.npy")
-
-df = pd.read_csv("ids.csv")
-print(df.head())
-del df["a"]
-print(df.head())
-df.to_csv("ids.csv", index=False)
