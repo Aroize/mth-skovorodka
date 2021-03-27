@@ -85,7 +85,15 @@ class DBOpenHelper:
 					ts long NOT NULL,
 					type STRING
 				)
+			
 				"""
+			cursor.execute("""
+				CREATE TABLE IF NOT EXISTS friends
+				(
+				     f_id INTEGER NOT NULL,
+				     f_name STRING NOT NULL
+				)
+			    """
 			# cursor.execute("""
 			# 	CREATE TABLe IF NOT EXISTS achievements
 			# 	(
@@ -147,6 +155,35 @@ class DBOpenHelper:
 			return None
 		finally:
 			cursor.close()
+
+	def find_user_by_id(self, id):
+		cursor = self.db.cursor()
+		try:
+			sql = "SELECT * FROM users WHERE id=?"
+			result = cursor.execute(sql, (id,))
+			user = result.fetchone()
+			if user != None:
+				return jsonify(user)
+			return None
+		except:
+			return None
+		finally:
+			cursor.close()
+
+	def add_user_to_friend(self,id):
+		cursor = self.db.cursor()
+		try:
+			sql = "SELECT *FROM users WHERE id=?"
+			name = cursor.execute(sql,(id,))
+			sql = "INSERT INTO friends(id, name) VALUES {}"
+			args = (id, name)
+			cursor.execute(sql.format(args))
+			self.db.commit()
+		except:
+			return None
+		finally:
+			cursor.close()
+
 		
 			
 
