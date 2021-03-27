@@ -1,4 +1,34 @@
+import os
+import pandas as pd
 import sqlite3
+
+def extract_themes_and_tags():
+
+	path = "./md/Word/"
+	themes = os.listdir(path)
+	paper_to_theme = {}
+
+	for theme_id, theme in enumerate(themes, 0):
+		for label in os.listdir(os.path.join(path, theme)):
+			papers_path = os.path.join(path, theme, label)
+			for paper in os.listdir(papers_path):
+				csv_name = os.path.join(theme, label, paper) + ".docx"
+				csv_kek = os.path.join(theme, label, paper) + " .docx"
+				print(csv_name)
+				paper_to_theme[csv_name] = theme_id
+				paper_to_theme[csv_kek] = theme_id
+	ids = pd.read_csv('ids.csv').values[:, :2]
+	paper_id_to_paper_theme_id = {}
+	for id, name in ids:
+		name = name.replace('й', 'й')
+		name = name.replace('Й', 'Й')
+		name = name.replace('ё', 'ё')
+		name = name.strip()
+		theme_id = paper_to_theme[str(name)]
+		paper_id_to_paper_theme_id[id] = theme_id
+	print(paper_id_to_paper_theme_id)
+
+
 
 class User:
 
@@ -22,7 +52,7 @@ class User:
 class DBOpenHelper:
 
 	def __init__(self):
-		self.db = sqlite3.connect("skovorodka3.db")
+		self.db = sqlite3.connect("skovorodka4.db")
 		cursor = self.db.cursor()
 		try:
 			cursor.execute("""
@@ -82,6 +112,14 @@ class DBOpenHelper:
 				)
 			    """
             )
+			cursor.execute("""
+            	CREATE TABLE IF NOT EXISTS user_themes
+            	(
+            		u_id INTEGER NOT NULL,
+            		t_id INTEGER NOT NULL
+            	)
+            	"""
+        	)
 		except Exception as e:
 			print(e)
 			return None
@@ -179,7 +217,8 @@ class DBOpenHelper:
 			if user is not None:
 				return jsonify(user)
 			return None
-		except:
+		except Exception as e:
+			print(e)
 			return None
 		finally:
 			cursor.close()
@@ -187,7 +226,7 @@ class DBOpenHelper:
 	def add_user_to_friend(self,id):
 		cursor = self.db.cursor()
 		try:
-			sql = "SELECT *FROM users WHERE id=?"
+			sql = "SELECT * FROM users WHERE id=?"
 			name = cursor.execute(sql,(id,))
 			sql = "INSERT INTO friends(id, name) VALUES {}"
 			args = (id, name)
@@ -197,9 +236,24 @@ class DBOpenHelper:
 			return None
 		finally:
 			cursor.close()
-		
+
+	def user_pick_themes(self, uid, themes):
+		cursor = self.db.cursor()
+		try:
+			for t_id in themes:
+				sql = "INSERT INTO user_themes (uid, t_id) VALUES {}"
+				args = (uid, t_id)
+				cursor.execute(sql.format(args))
+				cursor.db.commit()
+			return True
+		except Exception as e:
+			print(e)
+			return None
 			
 
 
 db_helper = DBOpenHelper()
 
+
+if __name__ == "__main__":
+	extract_themes_and_tags()
