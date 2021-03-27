@@ -13,9 +13,9 @@ const SignUp = () => {
         }
       }
     >
-      <Form>
+      <Form class="signup-form">
         <p>Name:</p>
-        <Field name="name" type="text" placeholder="" />
+        <Field class="label" name="name" type="text" placeholder="" />
         <p>Surname:</p>
         <Field name="surname" type="text" placeholder="" />
         <p>E-mail:</p>
