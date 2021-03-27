@@ -1,26 +1,8 @@
 import os
 import pandas as pd
 import sqlite3
-import flask
-
-achivements_names = {
-    "Новичок": 1,
-    "Воспитанник": 2,
-    "Последователь": 3,
-    "Адепт": 4,
-    "Ученик физ-мат Лицея": 5,
-    "Подмастерье": 7,
-    "Любитель": 10,
-    "Мастер": 15,
-    "Гранд-Мастер": 20,
-    "Гений": 25,
-    "Илон Маск": 27,
-    "Стивен Хоккинг": 30
-}
-
 
 def extract_themes_and_tags():
-
 	path = "./md/Word/"
 	themes = os.listdir(path)
 	paper_to_theme = {}
@@ -31,7 +13,6 @@ def extract_themes_and_tags():
 			for paper in os.listdir(papers_path):
 				csv_name = os.path.join(theme, label, paper) + ".docx"
 				csv_kek = os.path.join(theme, label, paper) + " .docx"
-				print(csv_name)
 				paper_to_theme[csv_name] = theme_id
 				paper_to_theme[csv_kek] = theme_id
 	ids = pd.read_csv('ids.csv').values[:, :2]
@@ -43,38 +24,51 @@ def extract_themes_and_tags():
 		name = name.strip()
 		theme_id = paper_to_theme[str(name)]
 		paper_id_to_paper_theme_id[id] = theme_id
-	print(paper_id_to_paper_theme_id)
 
+	cursor = db_helper.db.cursor()
+	cursor.execute("""
+		DROP TABLE IF EXISTS paper_to_theme
+		"""
+	)
+	cursor.execute("""
+		CREATE TABLE paper_to_theme ( p_id, t_id )
+		"""
+	)
+	sql = "INSERT INTO paper_to_theme ( p_id, t_id ) VALUES {}"
+	for row in paper_id_to_paper_theme_id.items():
+		cursor.execute(sql.format(row))
+
+	db_helper.db.commit()
+
+	print("Themes are fetched")
 
 
 class User:
 
-    def __init__(self, id, email, pwd, name, surname, age):
-        self.id = id
-        self.email = email
-        self.pwd = pwd
-        self.name = name
-        self.surname = surname
-        self.age = age
+	def __init__(self, id, email, pwd, name, surname, age):
+		self.id = id
+		self.email = email
+		self.pwd = pwd
+		self.name = name
+		self.surname = surname
+		self.age = age
 
-    def json(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'name': self.name,
-            'surname': self.surname,
-            'age': self.age
-        }
-
+	def json(self):
+		return {
+			'id': self.id,
+			'email': self.email,
+			'name': self.name,
+			'surname': self.surname,
+			'age': self.age
+		}
 
 class DBOpenHelper:
 
-    def __init__(self):
-        self.db = sqlite3.connect("skovorodka4.db")
-        cursor = self.db.cursor()
-        try:
-            cursor.execute("""
->>>>>>> df4e88a1e0d49f7fc52d2a9b04e18e8d6747a846
+	def __init__(self):
+		self.db = sqlite3.connect("skovorodka_1_1.db")
+		cursor = self.db.cursor()
+		try:
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS users
 				( 
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,24 +79,24 @@ class DBOpenHelper:
 					age INTEGER NOT NULL
 				)
 				"""
-                           )
-            cursor.execute("""
+			)
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS papers
 				(
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
 					path STRING NOT NULL
 				)
 				"""
-                           )
-            cursor.execute("""
+			)
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS favs
 				(
 					u_id INTEGER NOT NULL,
 					p_id INTEGER NOT NULL
 				)
 				"""
-                           )
-            cursor.execute("""
+			)
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS cosine
 				(
 					first INTEGER NOT NULL,
@@ -110,8 +104,8 @@ class DBOpenHelper:
 					cosine FLOAT NOT NULL
 				)
 				"""
-                           )
-            cursor.execute("""
+			)
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS stats
 				(
 					event_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,15 +116,14 @@ class DBOpenHelper:
 				)
 			
 				"""
-                           )
-            cursor.execute("""
+			)
+			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS friends
 				(
 				     f_id INTEGER NOT NULL,
 				     f_name STRING NOT NULL
 				)
 			    """
-<<<<<<< HEAD
             )
 			cursor.execute("""
             	CREATE TABLE IF NOT EXISTS user_themes
@@ -274,148 +267,4 @@ class DBOpenHelper:
 
 db_helper = DBOpenHelper()
 
-
-if __name__ == "__main__":
-	extract_themes_and_tags()
-=======
-                           )
-            cursor.execute("""
-				CREATE TABLE IF NOT EXISTS achievements
-				(
-				  user_id INTEGER NOT NULL,
-				  universe INTEGER NOT NULL,
-				  movements INTEGER NOT NULL,
-				  substance INTEGER NOT NULL,
-				  brain INTEGER NOT NULL,
-				  energy INTEGER NOT NULL,
-				  it INTEGER NOT NULL,
-				  materials INTEGER NOT NULL,
-				  medicine INTEGER NOT NULL,
-				  science INTEGER NOT NULL,
-				  language INTEGER NOT NULL
-				  )
-				  """
-                           )
-        except Exception as e:
-            print(e)
-            return None
-        finally:
-            cursor.close()
-
-    def user_by_email(self, email):
-        cursor = self.db.cursor()
-        try:
-            sql = "SELECT * FROM users WHERE email=?"
-            result = cursor.execute(sql, (email,))
-            user = result.fetchone()
-            if user is not None:
-                return User(*user)
-            return None
-        except Exception as e:
-            print(e)
-            return None
-        finally:
-            cursor.close()
-
-    def insert_user(self, email, pwd, name, surname, age):
-        cursor = self.db.cursor()
-        try:
-            sql = "INSERT INTO users (email, pwd, name, surname, age) VALUES {}"
-            args = (email, pwd, name, surname, age)
-            cursor.execute(sql.format(args))
-            self.db.commit()
-            id = cursor.lastrowid
-            return User(id, email, pwd, name, surname, age)
-        except Exception as e:
-            print(e)
-            return None
-        finally:
-            cursor.close()
-
-    def register_stat(self, uid, p_id, ts, event_type):
-        cursor = self.db.cursor()
-        try:
-            sql = "INSERT INTO stats (u_id, p_id, ts, type) VALUES {}"
-            args = (uid, p_id, ts, event_type)
-            cursor.execute(sql.format(args))
-            self.db.commit()
-            return True
-        except Exception as e:
-            print(e)
-            return None
-        finally:
-            cursor.close()
-
-    def add_to_fave(self, uid, p_id):
-        cursor = self.db.cursor()
-        try:
-            check_sql = "SELECT * FROM favs WHERE u_id=? and p_id=?"
-            args = (uid, p_id)
-            result = cursor.execute(check_sql, args).fetchall()
-            if len(result) == 0:
-                sql = "INSERT INTO favs (u_id, p_id) VALUES {}"
-                cursor.execute(sql.format(args))
-                self.db.commit()
-                return True
-            else:
-                return False
-        except Exception as e:
-            print(e)
-            return None
-        finally:
-            cursor.close()
-
-    def remove_from_favs(self, uid, p_id):
-        cursor = self.db.cursor()
-        try:
-            check_sql = "SELECT * FROM favs WHERE u_id=? and p_id=?"
-            args = (uid, p_id)
-            result = cursor.execute(check_sql, args).fetchall()
-            if len(result) == 0:
-                return False
-            sql = "DELETE FROM favs WHERE u_id=? and p_id=?"
-            cursor.execute(sql.format(args))
-            self.db.commit()
-            return True
-        except Exception as e:
-            print(e)
-            return None
-
-    def find_user_by_id(self, id):
-        cursor = self.db.cursor()
-        try:
-            sql = "SELECT * FROM users WHERE id=?"
-            result = cursor.execute(sql, (id,))
-            user = result.fetchone()
-            if user is not None:
-                return jsonify(user)
-            return None
-        except:
-            return None
-        finally:
-            cursor.close()
-
-    def add_user_to_friend(self, id):
-        cursor = self.db.cursor()
-        try:
-            sql = "SELECT *FROM users WHERE id=?"
-            name = cursor.execute(sql, (id,))
-            sql = "INSERT INTO friends(id, name) VALUES {}"
-            args = (id, name)
-            cursor.execute(sql.format(args))
-            self.db.commit()
-        except:
-            return None
-
-    def get_achievements(self, user_id, name_ach):
-        cursor = self.db.cursor()
-        try:
-            sql = "SELECT *FROM achievements WHERE user_id=? AND name=?"
-            result = int(sql)
-            return jsonify(achivements_names[result])
-        finally:
-            cursor.close()
-
-
-db_helper = DBOpenHelper()
->>>>>>> df4e88a1e0d49f7fc52d2a9b04e18e8d6747a846
+extract_themes_and_tags()
