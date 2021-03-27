@@ -40,9 +40,6 @@ const SignUp = () => {
           <Field type="checkbox" name="themes" value="matter" /> Материя
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="medicine" /> Медицина
-        </label>
-        <label>
           <Field type="checkbox" name="themes" value="brain" /> Мозг
         </label>
         <label>
