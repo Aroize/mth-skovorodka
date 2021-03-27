@@ -3,17 +3,18 @@ import json
 
 class User:
 
-	def __init__(self, id, name, surname, email, age):
+	def __init__(self, id, email, pwd, name, surname, age):
 		self.id = id
 		self.name = name
 		self.surname = surname
 		self.email = email
+		self.pwd = pwd
 		self.age = age
 
 	def args(self):
 		if (self.id == -1):
-			return (self.name, self.surname, self.email, self.age)
-		return (self.id, self.name, self.surname, self.email, self.age)
+			return (self.email, self.pwd, self.name, self.surname, self.age)
+		return (self.id, self.email, self.pwd, self.name, self.surname, self.age)
 
 	def json(self):
 		return json.dumps({
@@ -56,7 +57,7 @@ class DBOpenHelper:
 
 
 	def insert_user(self, user):
-		sql = "INSERT INTO users (name, surname, email, age) VALUES (%s, %s, %s, %s)"
+		sql = "INSERT INTO users (email, pwd, name, surname, age) VALUES (%s, %s, %s, %s, %s)"
 		args = user.args()
 		cursor = self.connection.cursor()
 		cursor.execute(sql, args)
