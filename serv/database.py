@@ -19,6 +19,21 @@ class User:
 			'age': self.age
 		}
 
+achivements_naming = {
+"Новичок":1,
+ "Воспитанник":2,
+ "Последователь":3,
+ "Адепт":4,
+ "Ученик физ-мат Лицея":5,
+ "Подмастерье":7,
+ "Любитель":10,
+ "Мастер":15,
+"Гранд-Мастер":20,
+"Гений":25,
+"Илон Маск":27,
+"Стивен Хоккинг":30
+}
+
 class DBOpenHelper:
 
 	def __init__(self):
@@ -71,6 +86,32 @@ class DBOpenHelper:
 					type STRING
 				)
 				"""
+			# cursor.execute("""
+			# 	CREATE TABLe IF NOT EXISTS achievements
+			# 	(
+			# 	  universe int not NULL,
+			# 	  universe_name varchar(20),
+			# 	  movements int not NULL,
+			# 	  movements_name varchar(20),
+			# 	  substance int not NULL,
+			# 	  substance_name varchar(20),
+			# 	  brain INT NOT NULL,
+			# 	  brain_name varchar(20),
+			# 	  energy INT NOT NULL,
+			# 	  energy_name varchar(20),
+			# 	  it int NOT NULL,
+			# 	  it_name varchar(20),
+			# 	  materials int not null,
+			# 	  materials_name varchar(20),
+			# 	  medicine int not null,
+			# 	  medicine_name varchar(20),
+			# 	  science int not null,
+			# 	  science_name varchar(20),
+			# 	  language int not null,
+			# 	  language_name varchar(20)
+			# 	  )
+			# 	  """
+			# )
 			)
 		except:
 			pass
