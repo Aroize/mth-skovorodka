@@ -5,39 +5,64 @@ import sqlite3
 def extract_themes_and_tags():
 	path = "./md/Word/"
 	themes = os.listdir(path)
-	paper_to_theme = {}
+	paper_to_label = {}
+	label_to_theme = {}
+
+
+	labels_count = 0
 
 	for theme_id, theme in enumerate(themes, 0):
 		for label in os.listdir(os.path.join(path, theme)):
+			label_to_theme[labels_count] = theme_id
+
+
 			papers_path = os.path.join(path, theme, label)
 			for paper in os.listdir(papers_path):
 				csv_name = os.path.join(theme, label, paper) + ".docx"
 				csv_kek = os.path.join(theme, label, paper) + " .docx"
-				paper_to_theme[csv_name] = theme_id
-				paper_to_theme[csv_kek] = theme_id
+				paper_to_label[csv_name] = labels_count
+				paper_to_label[csv_kek] = labels_count
+
+			labels_count += 1
+	
 	ids = pd.read_csv('ids.csv').values[:, :2]
-	paper_id_to_paper_theme_id = {}
+	paper_id_to_label_id = {}
 	for id, name in ids:
 		name = name.replace('й', 'й')
 		name = name.replace('Й', 'Й')
 		name = name.replace('ё', 'ё')
 		name = name.strip()
-		theme_id = paper_to_theme[str(name)]
-		paper_id_to_paper_theme_id[id] = theme_id
+		label_id = paper_to_label[name]
+		paper_id_to_label_id[id] = label_id
 
 	cursor = db_helper.db.cursor()
 	cursor.execute("""
-		DROP TABLE IF EXISTS paper_to_theme
+		DROP TABLE IF EXISTS paper_to_label
 		"""
 	)
 	cursor.execute("""
-		CREATE TABLE paper_to_theme ( p_id, t_id )
+		CREATE TABLE paper_to_label ( p_id INTEGER NOT NULL, l_id INTEGER NOT NULL )
 		"""
 	)
-	sql = "INSERT INTO paper_to_theme ( p_id, t_id ) VALUES {}"
-	for row in paper_id_to_paper_theme_id.items():
+	sql = "INSERT INTO paper_to_label ( p_id, l_id ) VALUES {}"
+	for row in paper_id_to_label_id.items():
 		cursor.execute(sql.format(row))
 
+	db_helper.db.commit()
+
+	cursor.execute("""
+		DROP TABLE IF EXISTS label_to_theme
+		"""
+	)
+	cursor.execute("""
+		CREATE TABLE label_to_theme ( l_id INTEGER NOT NULL, t_id INTEGER NOT NULL )
+		"""
+	)
+
+	sql = "INSERT INTO label_to_theme ( l_id, t_id ) VALUES {}"
+
+	for row in label_to_theme.items():
+		cursor.execute(sql.format(row))
 	db_helper.db.commit()
 
 	print("Themes are fetched")
