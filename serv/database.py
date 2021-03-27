@@ -19,25 +19,10 @@ class User:
 			'age': self.age
 		}
 
-achivements_naming = {
-"Новичок":1,
- "Воспитанник":2,
- "Последователь":3,
- "Адепт":4,
- "Ученик физ-мат Лицея":5,
- "Подмастерье":7,
- "Любитель":10,
- "Мастер":15,
-"Гранд-Мастер":20,
-"Гений":25,
-"Илон Маск":27,
-"Стивен Хоккинг":30
-}
-
 class DBOpenHelper:
 
 	def __init__(self):
-		self.db = sqlite3.connect("skovorodka2.db")
+		self.db = sqlite3.connect("skovorodka3.db")
 		cursor = self.db.cursor()
 		try:
 			cursor.execute("""
@@ -80,41 +65,17 @@ class DBOpenHelper:
 			cursor.execute("""
 				CREATE TABLE IF NOT EXISTS stats
 				(
+					event_id INTEGER PRIMARY KEY AUTOINCREMENT,
 					u_id INTEGER NOT NULL,
 					p_id INTEGER NOT NULL,
 					ts long NOT NULL,
 					type STRING
 				)
 				"""
-			# cursor.execute("""
-			# 	CREATE TABLe IF NOT EXISTS achievements
-			# 	(
-			# 	  universe int not NULL,
-			# 	  universe_name varchar(20),
-			# 	  movements int not NULL,
-			# 	  movements_name varchar(20),
-			# 	  substance int not NULL,
-			# 	  substance_name varchar(20),
-			# 	  brain INT NOT NULL,
-			# 	  brain_name varchar(20),
-			# 	  energy INT NOT NULL,
-			# 	  energy_name varchar(20),
-			# 	  it int NOT NULL,
-			# 	  it_name varchar(20),
-			# 	  materials int not null,
-			# 	  materials_name varchar(20),
-			# 	  medicine int not null,
-			# 	  medicine_name varchar(20),
-			# 	  science int not null,
-			# 	  science_name varchar(20),
-			# 	  language int not null,
-			# 	  language_name varchar(20)
-			# 	  )
-			# 	  """
-			# )
 			)
-		except:
-			pass
+		except Exception as e:
+			print(e)
+			return None
 		finally:
 			cursor.close()
 
@@ -129,7 +90,8 @@ class DBOpenHelper:
 			if user != None:
 				return User(*user)
 			return None
-		except:
+		except Exception as e:
+			print(e)
 			return None
 		finally:
 			cursor.close()
@@ -143,10 +105,64 @@ class DBOpenHelper:
 			self.db.commit()
 			id = cursor.lastrowid
 			return User(id, email, pwd, name, surname, age)	
-		except:
+		except Exception as e:
+			print(e)
 			return None
 		finally:
 			cursor.close()
+
+
+	def register_stat(self, uid, p_id, ts, event_type):
+		cursor = self.db.cursor()
+		try:
+			sql = "INSERT INTO stats (u_id, p_id, ts, type) VALUES {}"
+			args = (uid, p_id, ts, event_type)
+			cursor.execute(sql.format(args))
+			self.db.commit()
+			return True
+		except Exception as e:
+			print(e)
+			return None
+		finally:
+			cursor.close()
+
+	def add_to_fave(self, uid, p_id):
+		cursor = self.db.cursor()
+		try:
+			check_sql = "SELECT * FROM favs WHERE u_id=? and p_id=?"
+			args = (uid, p_id)
+			result = cursor.execute(check_sql, args).fetchall()
+			if len(result) == 0:
+				sql = "INSERT INTO favs (u_id, p_id) VALUES {}"
+				cursor.execute(sql.format(args))
+				self.db.commit()
+				return True
+			else:
+				return False
+		except Exception as e:
+			print(e)
+			return None
+		finally:
+			cursor.close()
+
+
+	def remove_from_favs(self, uid, p_id):
+		cursor = self.db.cursor()
+		try:
+			check_sql = "SELECT * FROM favs WHERE u_id=? and p_id=?"
+			args = (uid, p_id)
+			result = cursor.execute(check_sql, args).fetchall()
+			if len(result) == 0:
+				return False
+			sql = "DELETE FROM favs WHERE u_id=? and p_id=?"
+			cursor.execute(sql.format(args))
+			self.db.commit()
+			return True
+		except Exception as e:
+			print(e)
+			return None
+
+
 		
 			
 
