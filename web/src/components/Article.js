@@ -17,8 +17,12 @@ const Article = () => {
       
         return (
           <div>
+          <div class="article">
           <ReactMarkdown children={article}></ReactMarkdown>
+          </div>
+          <div class="rec-wrapper">
           <ArticlesRec/>
+          </div>
           </div>
           );
     

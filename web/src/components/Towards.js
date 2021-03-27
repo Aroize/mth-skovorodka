@@ -7,8 +7,10 @@ const Towards = () => {
     return (
 
     levelList.map(element => 
-        <TowardsCard level={element} key={element}/>
-))
-}
+        <TowardsCard level={element} key={element}/>)
+    
+)}
+
+
 
 export default Towards

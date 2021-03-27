@@ -1,0 +1,53 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: -webkit-gradient(linear, left top, right top, from(#92fe9d), to(#00c9ff));
+  background: linear-gradient(to right, #92fe9d, #00c9ff);
+  font-family: 'Montserrat', sans-serif;
+}
+
+nav {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 15px 30px;
+}
+
+nav .right-text {
+  float: right;
+}
+
+nav li {
+  list-style-type: none;
+  display: inline-block;
+  margin: 0px 30px;
+}
+
+nav li a {
+  color: #E1E8ED;
+  text-decoration: none;
+}
+
+.article {
+  background: #E1E8ED;
+  line-height: 1.7;
+  max-width: 1200px;
+  margin: 10px auto;
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.rec-wrapper {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[5];
+      grid-template-columns: repeat(5, 1fr);
+}
+
+.signup-form {
+  margin: 0px auto;
+  width: 320px;
+}
+/*# sourceMappingURL=style.css.map */
