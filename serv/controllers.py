@@ -25,6 +25,7 @@ class AuthHandler(RequestHandler):
     	if user.pwd != pwd:
     		self.set_status(401)
     		self.write("{\"msg\": \"Wrong password\"}")
+    		return
     	
     	self.write(user.json())
 
@@ -35,10 +36,10 @@ class RegisterHandler(RequestHandler):
 	def get_mapping():
 		return "/user.register"
 
-	def data_revecived(self, chunk):
+	def data_received(self, chunk):
 		pass
 
-	def get(self, *args, **kwargs):
+	def post(self, *args, **kwargs):
 		email = self.get_argument("email")
 		user = db_helper.get_user_by_email(email)
 		
@@ -62,7 +63,18 @@ class RegisterHandler(RequestHandler):
 		self.write(db_helper.get_user_by_email(email).json())
 
 
-class 
+class PaperClickHandler(RequestHandler):
+
+	@staticmethod
+	def get_mapping():
+		return "/paper.click"
+
+	def data_received(self, chunk):
+		pass
+
+	def post(self, *args, **kwargs):
+		uid = self.get_argument("uid")
+		p_id = self.get_argument("p_id")
 
 
 
