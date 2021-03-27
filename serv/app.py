@@ -100,7 +100,7 @@ def faveAdd():
     if result is not None:
         if result:
             code = 200
-            request["response"] = 1
+            response["response"] = 0
         else:
             code = 409
             response["msg"] = "Already in favs"
@@ -120,7 +120,7 @@ def faveRemove():
     if result is not None:
         if result:
             code = 200
-            request["response"] = 1
+            response["response"] = 0
         else:
             code = 404
             response["msg"] = "Not in favs"
