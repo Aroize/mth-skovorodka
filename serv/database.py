@@ -383,12 +383,25 @@ class DBOpenHelper:
             papers = set(papers)
 
             sql = "SELECT p_id FROM paper_dif WHERE diff - {} < 3 OR {} - diff < 3".format(r, r)
-            return cursor.execute(sql).fetchall()
+            return list(map(lambda x: x[0], cursor.execute(sql).fetchall()))
         except Exception as e:
             print(e)
             return None
         finally:
             cursor.close()
+
+    def get_diff(self, p_id):
+        cursor = self.db.cursor()
+        try:
+            sql = "SELECT diff FROM paper_dif WHERE p_id=?"
+            result = cursor.execute(sql, (p_id,)).fetchone()
+            return result
+        except Exception as e:
+        	print(e)
+        	return None
+        finally:
+            cursor.close()
+
 
     def get_paper_path(self, p_id):
         cursor = self.db.cursor()
@@ -459,7 +472,7 @@ class DBOpenHelper:
             args = ()
             path = cursor.execute(sql, args).fetchall()
             if len(path) != 0:
-                return path
+                return list(map(lambda x: x[0], path))
             else:
                 print("Found 0 papers!")
                 return None

@@ -6,6 +6,7 @@ import time
 from ml_func import get_starting_recommendations, get_simm_recommendations
 
 app = Flask(__name__, static_url_path='')
+app.config['JSON_AS_ASCII'] = False
 cors = CORS(app)
 
 
@@ -168,6 +169,23 @@ def getPaper():
         return bruh, 200
     else:
         return jsonify({'msg': "No such file"}), 404
+
+@app.route('/paper.info', methods=['GET'])
+@cross_origin()
+def getPaperTitle():
+    p_id = request.args.get('p_id')
+    path = db_helper.get_paper_path(p_id)[0]
+    if path is not None:
+        obj = path.split("/")
+        return jsonify({
+            "theme": obj[0],
+            "label": obj[1],
+            "title": obj[2],
+            "p_id": p_id
+            }), 200
+    else:
+        return jsonify({"msg": "Internal Error"}), 500
+
 
 @app.route('/data.getStartingRecommendations', methods=['GET'])
 @cross_origin()
