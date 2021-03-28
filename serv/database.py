@@ -305,7 +305,7 @@ class DBOpenHelper:
             if len(result) == 0:
                 return False
             sql = "DELETE FROM favs WHERE u_id=? and p_id=?"
-            cursor.execute(sql.format(args))
+            cursor.execute(sql, args)
             self.db.commit()
             return True
         except Exception as e:
@@ -345,10 +345,10 @@ class DBOpenHelper:
         cursor = self.db.cursor()
         try:
             for t_id in themes:
-                sql = "INSERT INTO user_themes (uid, t_id) VALUES {}"
+                sql = "INSERT INTO user_themes (u_id, t_id) VALUES {}"
                 args = (uid, t_id)
                 cursor.execute(sql.format(args))
-                cursor.db.commit()
+                self.db.commit()
             return True
         except Exception as e:
             print(e)
