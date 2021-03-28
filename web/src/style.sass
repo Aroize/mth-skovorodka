@@ -64,7 +64,18 @@ nav
 
 .rec-wrapper
     display: grid
+    width: 100%
     grid-template-columns: repeat(5, 1fr)
+    padding: 15px
+    position: fixed
+    bottom: 0px
+    background-color: rgba(0, 0, 0, 0.7)
+
+.rec-card
+    margin: auto
+    a
+        color: $grey-5
+        text-decoration: none
 
 // .darkness
 //     filter: brightness(40%)
@@ -146,6 +157,21 @@ nav
         &:hover
             background: linear-gradient(90deg, $green, $blue)
 
+button
+    border-radius: 25px
+    border: none
+    font-size: 1em
+    width: 150px
+    height: 40px
+    margin: 0 auto
+    cursor: pointer
+    outline: none
+    background-color: $grey-1
+    color: $grey-5
+    font-weight: 400
+    &:hover
+        background: linear-gradient(90deg, $green, $blue)
+
 .towards-wrapper
     display: grid
     grid-template-columns: repeat(3, 1fr)
@@ -195,4 +221,5 @@ nav
     background: #e1e8ed
     border-radius: 15px
     margin: 10px
-    padding: 10px 15px
+    display: flex
+    justify-content: center

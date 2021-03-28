@@ -8,8 +8,19 @@ const Article = () => {
         const [isStared, setIsStared] = useState(false)
 
         useEffect(() => {
-          axios.get('https://raw.githubusercontent.com/sherlock-project/sherlock/master/README.md')
-          .then(resp => {setArticle(resp.data.toString())}) 
+          let headers = new Headers()
+          headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+          // axios.get('https://raw.githubusercontent.com/sherlock-project/sherlock/master/README.md')
+          // .then(resp => {setArticle(resp.data.toString())}) 
+          // .catch( (error) => {
+          //   console.log(error);
+          // });  
+          axios.get('https://stark-chamber-07526.herokuapp.com/paper?p_id=1')
+          .then(resp => { console.log(resp)
+            axios.get(resp.data).then(res => setArticle(res.data))
+            // setArticle(resp.data.toString())
+            // console.log(resp)
+          })
           .catch( (error) => {
             console.log(error);
           });  

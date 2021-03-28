@@ -4,7 +4,7 @@ import {Link } from "react-router-dom";
 const RecCard = ({name, id}) => {
     console.log(name, id)
     return (
-        <div>
+        <div class="rec-card">
         <h3><Link to={`/article/${id}`}>{name}</Link></h3>
         </div>
     )
