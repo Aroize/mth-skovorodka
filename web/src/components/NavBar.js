@@ -9,7 +9,7 @@ const NavBar = () => {
   <ul>
     <li><Link to='/article'>Home</Link></li>
     <li><Link to='/towards'>Достижения</Link></li>
-    <li><Link to='/history'>История</Link></li>
+    <li><Link to='/historyy'>История</Link></li>
     <li><Link to='/rec'>Рек</Link></li>
     <span class="right-text">
     {Auth && (

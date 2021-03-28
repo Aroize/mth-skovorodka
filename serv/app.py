@@ -85,7 +85,7 @@ def paperLeft():
         response["response"] = 0
         code = 200
     else:
-        response["msg"] = "Internall Error"
+        response["msg"] = "Internal Error"
         code = 500
     return jsonify(response), code
 
@@ -155,6 +155,22 @@ def getPaper():
         return bruh, 200
     else:
         return jsonify({'msg': "No such file"}), 404
+
+
+@app.route('/data/getPaper', methods=['GET'])
+def pickThemes():
+    uid = request.args.get('uid')
+    pid = request.args.get('pid')
+    result = db_helper.clicked_on_paper(uid, pid)
+    response = {}
+    code = 0
+    if result is not None:
+        code = 200
+        response["response"] = result
+    else:
+        code = 500
+        response["mgs"] = "Internal Error"
+    return jsonify(response), code
 
 
 if __name__ == '__main__':

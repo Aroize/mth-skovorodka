@@ -37,6 +37,32 @@ nav li a {
   padding: 30px;
   border-radius: 15px;
   margin-bottom: 30px;
+  position: relative;
+}
+
+.star {
+  position: absolute;
+  right: 0%;
+  -webkit-transform: translate(50%, -50%);
+          transform: translate(50%, -50%);
+  top: 0px;
+  border-radius: 25px;
+  padding: 5px;
+  border: none;
+  font-size: 1em;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  cursor: pointer;
+  outline: none;
+  background-color: #738694;
+  color: #E1E8ED;
+  font-weight: 400;
+}
+
+.star:hover {
+  background: -webkit-gradient(linear, left top, right top, from(#92fe9d), to(#00c9ff));
+  background: linear-gradient(90deg, #92fe9d, #00c9ff);
 }
 
 .rec-wrapper {
@@ -212,5 +238,12 @@ nav li a {
 .profile-card .tags {
   text-align: center;
   padding-bottom: 20px;
+}
+
+.ways {
+  background: #e1e8ed;
+  border-radius: 15px;
+  margin: 10px;
+  padding: 10px 15px;
 }
 /*# sourceMappingURL=style.css.map */
