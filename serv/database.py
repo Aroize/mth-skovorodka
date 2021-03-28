@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import sqlite3
 
-
 achivements_names = {
     "Новичок": 1,
     "Воспитанник": 2,
@@ -63,10 +62,8 @@ def extract_themes_and_tags():
     	""")
     sql = "INSERT INTO paper_dif ( p_id, diff ) VALUES {}"
     for row in paper_id_to_dif.items():
-    	cursor.execute(sql.format(row))
+        cursor.execute(sql.format(row))
     db_helper.db.commit()
-
-
 
     cursor.execute("""
 		DROP TABLE IF EXISTS paper_to_label
@@ -345,38 +342,38 @@ class DBOpenHelper:
         finally:
             cursor.close()
 
-    def get_diff_range(self, u_id, t_id, r):
-    	cursor = self.db.cursor()
-    	try:
-    		sql = "SELECT t_id FROM user_themes WHERE u_id = ?"
-    		t_ids = cursor.execute(sql, (uid,)).fetchall()
+    def get_diff_range(self, u_id, r=6):
+        cursor = self.db.cursor()
+        try:
+            sql = "SELECT t_id FROM user_themes WHERE u_id = ?"
+            t_ids = cursor.execute(sql, (u_id,)).fetchall()
 
-    		labels = []
-    		sql = "SELECT l_id FROM label_to_theme WHERE t_id = ?"
-    		for t_id in t_ids:
-    			l_ids = cursor.execute(sql, (t_id,)).fetchall()
-    			labels.extend(l_ids)
-    		labels = set(labels)
-    		sql = "SELECT p_id FROM paper_to_label WHERE l_id = ?"
-    		papers = []
-    		for l_id in labels:
-    			p_ids = cursor.execute(sql, (l_id,)).fetchall()
-    			papers.extend(p_ids)
-    		papers = set(papers)
+            labels = []
+            sql = "SELECT l_id FROM label_to_theme WHERE t_id = ?"
+            for t_id in t_ids:
+                l_ids = cursor.execute(sql, (t_id,)).fetchall()
+                labels.extend(l_ids)
+            labels = set(labels)
+            sql = "SELECT p_id FROM paper_to_label WHERE l_id = ?"
+            papers = []
+            for l_id in labels:
+                p_ids = cursor.execute(sql, (l_id,)).fetchall()
+                papers.extend(p_ids)
+            papers = set(papers)
 
-    		sql = "SELECT p_id FROM paper_dif WHERE diff - {} < 3 OR {} - diff < 3".format(r, r)
-    		return cursor.execute(sql).fetchall()
-    	except Exception as e:
-    		print(e)
-    		return None
-		finally:
-			cursor.close()
+            sql = "SELECT p_id FROM paper_dif WHERE diff - {} < 3 OR {} - diff < 3".format(r, r)
+            return cursor.execute(sql).fetchall()
+        except Exception as e:
+            print(e)
+            return None
+        finally:
+            cursor.close()
 
     def get_diff(self, p_id):
         cursor = self.db.cursor()
         try:
             sql = "SELECT diff FROM paper_dif WHERE p_id=?"
-            result = cursor.execute(sql,(p_id,)).fetchone()
+            result = cursor.execute(sql, (p_id,)).fetchone()
             return result
         finally:
             cursor.close()
