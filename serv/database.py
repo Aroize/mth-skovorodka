@@ -39,7 +39,7 @@ def extract_themes_and_tags():
                 paper_to_label[csv_kek] = (labels_count, rel_name)
             labels_count += 1
 
-    ids = pd.read_csv('../ml/ids.csv').values
+    ids = pd.read_csv('ids.csv').values
     paper_id_to_dif = {}
     paper_id_to_label_id = {}
     paper_id_to_rel_path = {}
@@ -363,32 +363,6 @@ class DBOpenHelper:
         finally:
             cursor.close()
 
-    def get_diff_range(self, u_id, t_id, r):
-    	cursor = self.db.cursor()
-    	try:
-    		sql = "SELECT t_id FROM user_themes WHERE u_id = ?"
-    		t_ids = cursor.execute(sql, (uid,)).fetchall()
-
-    		labels = []
-    		sql = "SELECT l_id FROM label_to_theme WHERE t_id = ?"
-    		for t_id in t_ids:
-    			l_ids = cursor.execute(sql, (t_id,)).fetchall()
-    			labels.extend(l_ids)
-    		labels = set(labels)
-    		sql = "SELECT p_id FROM paper_to_label WHERE l_id = ?"
-    		papers = []
-    		for l_id in labels:
-    			p_ids = cursor.execute(sql, (l_id,)).fetchall()
-    			papers.extend(p_ids)
-    		papers = set(papers)
-
-    		sql = "SELECT p_id FROM paper_dif WHERE diff - {} < 3 OR {} - diff < 3".format(r, r)
-    		return cursor.execute(sql).fetchall()
-    	except Exception as e:
-            print(e)
-            return None
-    	finally:
-
     def get_diff_range(self, u_id, r=6):
         cursor = self.db.cursor()
         try:
@@ -441,6 +415,19 @@ class DBOpenHelper:
                 return True
             else:
                 return False
+        except Exception as e:
+            print(e)
+            return None
+        finally:
+            cursor.close()
+
+    def get_already_read(self, u_id):
+        cursor = self.db.cursor()
+        try:
+            check_sql = "SELECT * FROM already_read WHERE u_id=? and p_id=?"
+            args = (u_id, p_id)
+            result = cursor.execute(check_sql, args).fetchall()
+            return result
         except Exception as e:
             print(e)
             return None
