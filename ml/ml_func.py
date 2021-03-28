@@ -32,8 +32,8 @@ def get_starting_recommendations(u_id):
 
     articles_from_big_interests = db_helper.get_diff_range(u_id)  # use diff +-3, if >10 resulting articles
     part_2 = []
-    if len(articles_from_big_interests) >= 10:  # sort by diff
-        part_2.append(sample(articles_from_big_interests, 10))
+    if len(articles_from_big_interests) >= 20:  # sort by diff
+        part_2.append(sample(articles_from_big_interests, 20))
     else:
         part_2.append(sample(articles_from_big_interests, len(articles_from_big_interests)))
     for i in range(len(part_2)):
@@ -42,7 +42,7 @@ def get_starting_recommendations(u_id):
     if len(part_2) == 0:
         print("Empty rec2")
 
-    all_articles = []  # anarchy
+    all_articles = db_helper.get_all_articles()  # anarchy
     part_3 = []
     if len(all_articles) >= 10:  # sort by diff
         part_3.append(sample(all_articles, 10))

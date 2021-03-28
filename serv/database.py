@@ -410,7 +410,7 @@ class DBOpenHelper:
         self.insert_already_read(u_id, p_id)
         cursor = self.db.cursor()
         try:
-            sql = "SELECT * FROM paper_to_label WHERE p_id=?"
+            sql = "SELECT l_id FROM paper_to_label WHERE p_id=?"
             args = (p_id,)
             path = cursor.execute(sql, args).fetchall()
             if len(path) != 0:
@@ -424,6 +424,22 @@ class DBOpenHelper:
         finally:
             cursor.close()
 
+    def get_all_articles(self):
+        cursor = self.db.cursor()
+        try:
+            sql = "SELECT l_id FROM paper_to_label"
+            args = ()
+            path = cursor.execute(sql, args).fetchall()
+            if len(path) != 0:
+                return path
+            else:
+                print("Found 0 papers!")
+                return None
+        except Exception as e:
+            print(e)
+            return None
+        finally:
+            cursor.close()
 
 db_helper = DBOpenHelper()
 
