@@ -39,7 +39,7 @@ def extract_themes_and_tags():
 
             labels_count += 1
 
-    ids = pd.read_csv('ids.csv').values
+    ids = pd.read_csv('../ml/ids.csv').values
     paper_id_to_dif = {}
     paper_id_to_label_id = {}
     for id, name, dif in ids:
