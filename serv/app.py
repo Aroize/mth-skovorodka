@@ -1,13 +1,16 @@
 from flask import Flask, request, jsonify, Response, send_from_directory
+from flask_cors import CORS, cross_origin
 from database import *
 import time
 
-from ml.ml_func import get_starting_recommendations, get_simm_recommendations
+from ml_func import get_starting_recommendations, get_simm_recommendations
 
 app = Flask(__name__)
+cors = CORS(app)
 
 
 @app.route('/user.auth', methods=['GET'])
+@cross_origin
 def auth():
     email = request.args.get('email')
     pwd = request.args.get('pwd')
@@ -28,6 +31,7 @@ def auth():
 
 
 @app.route('/user.register', methods=['POST', 'GET'])
+@cross_origin
 def register():
     email = request.args.get('email')
 
@@ -58,6 +62,7 @@ def register():
 
 
 @app.route('/stat.click', methods=['POST', 'GET'])
+@cross_origin
 def paperClicked():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -76,6 +81,7 @@ def paperClicked():
 
 
 @app.route('/stat.close', methods=['POST', 'GET'])
+@cross_origin
 def paperLeft():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -94,6 +100,7 @@ def paperLeft():
 
 
 @app.route('/fave.add', methods=['POST', 'GET'])
+@cross_origin
 def faveAdd():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -114,6 +121,7 @@ def faveAdd():
 
 
 @app.route('/fave.remove', methods=['POST', 'GET'])
+@cross_origin
 def faveRemove():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -134,6 +142,7 @@ def faveRemove():
 
 
 @app.route('/user.pickThemes', methods=['POST', 'GET'])
+@cross_origin
 def pickThemes():
     uid = request.args.get('uid')
     themes = request.args.get('themes').split(',')
@@ -149,6 +158,7 @@ def pickThemes():
     return jsonify(response), code
 
 @app.route('/paper', methods=['GET'])
+@cross_origin
 def getPaper():
     p_id = request.args.get('p_id')
     path = db_helper.get_paper_path(p_id)[0]
@@ -159,24 +169,8 @@ def getPaper():
     else:
         return jsonify({'msg': "No such file"}), 404
 
-
-@app.route('/data.getPaper', methods=['GET'])
-def getPaper():
-    uid = request.args.get('uid')
-    pid = request.args.get('pid')
-    result = db_helper.clicked_on_paper(uid, pid)
-    response = {}
-    code = 0
-    if result is not None:
-        code = 200
-        response["response"] = result
-    else:
-        code = 500
-        response["mgs"] = "Internal Error"
-    return jsonify(response), code
-
-
 @app.route('/data.getStartingRecommendations', methods=['GET'])
+@cross_origin
 def getStartingRecommendations():
     uid = request.args.get('uid')
     result = get_starting_recommendations(uid)
@@ -192,6 +186,7 @@ def getStartingRecommendations():
 
 
 @app.route('/data.getSimmRecommendations', methods=['GET'])
+@cross_origin
 def getSimmRecommendations():
     uid = request.args.get('uid')
     result = get_simm_recommendations(uid)
