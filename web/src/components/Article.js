@@ -5,6 +5,7 @@ import ArticlesRec from './ArticlesRec';
 
 const Article = () => {
         const [article, setArticle] = useState("")
+        const [rec, setRec] = useState({})
         const [isStared, setIsStared] = useState(false)
 
         useEffect(() => {
@@ -25,6 +26,20 @@ const Article = () => {
             console.log(error);
           });  
         }, [article])
+
+        // useEffect(() => {
+        //   let headers = new Headers()
+        //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
+        //   axios.get('https://stark-chamber-07526.herokuapp.com/data.getStartingReommendations')
+        //   .then(resp => { console.log(resp)
+        //     axios.get(resp.data).then(res => setArticle(res.data))
+        //     // setArticle(resp.data.toString())
+        //     // console.log(resp)
+        //   })
+        //   .catch( (error) => {
+        //     console.log(error);
+        //   });  
+        // }, [article])
       
       
         return (
