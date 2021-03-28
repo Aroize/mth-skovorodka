@@ -40,17 +40,34 @@ def extract_themes_and_tags():
 
             labels_count += 1
 
-    ids = pd.read_csv('ids.csv').values[:, :2]
+    ids = pd.read_csv('ids.csv').values
+    paper_id_to_dif = {}
     paper_id_to_label_id = {}
-    for id, name in ids:
+    for id, name, dif in ids:
         name = name.replace('й', 'й')
         name = name.replace('Й', 'Й')
         name = name.replace('ё', 'ё')
         name = name.strip()
         label_id = paper_to_label[name]
         paper_id_to_label_id[id] = label_id
+        paper_id_to_dif[id] = dif
 
     cursor = db_helper.db.cursor()
+
+    cursor.execute("""
+    	DROP TABLE IF EXISTS paper_dif
+    	""")
+
+    cursor.execute("""
+    	CREATE TABLE paper_dif ( p_id INTEGER NOT NULL, diff FLOAT NOT NULL )
+    	""")
+    sql = "INSERT INTO paper_dif ( p_id, diff ) VALUES {}"
+    for row in paper_id_to_dif.items():
+    	cursor.execute(sql.format(row))
+    db_helper.db.commit()
+
+
+
     cursor.execute("""
 		DROP TABLE IF EXISTS paper_to_label
 		"""
