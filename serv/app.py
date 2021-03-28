@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify, Response, send_from_directory
 from database import *
 import time
+
+from ml.ml_func import get_starting_recommendations, get_simm_recommendations
+
 app = Flask(__name__)
 
 
@@ -157,11 +160,41 @@ def getPaper():
         return jsonify({'msg': "No such file"}), 404
 
 
-@app.route('/data/getPaper', methods=['GET'])
-def pickThemes():
+@app.route('/data.getPaper', methods=['GET'])
+def getPaper():
     uid = request.args.get('uid')
     pid = request.args.get('pid')
     result = db_helper.clicked_on_paper(uid, pid)
+    response = {}
+    code = 0
+    if result is not None:
+        code = 200
+        response["response"] = result
+    else:
+        code = 500
+        response["mgs"] = "Internal Error"
+    return jsonify(response), code
+
+
+@app.route('/data.getStartingRecommendations', methods=['GET'])
+def getStartingRecommendations():
+    uid = request.args.get('uid')
+    result = get_starting_recommendations(uid)
+    response = {}
+    code = 0
+    if result is not None:
+        code = 200
+        response["response"] = result
+    else:
+        code = 500
+        response["mgs"] = "Internal Error"
+    return jsonify(response), code
+
+
+@app.route('/data.getSimmRecommendations', methods=['GET'])
+def getSimmRecommendations():
+    uid = request.args.get('uid')
+    result = get_simm_recommendations(uid)
     response = {}
     code = 0
     if result is not None:

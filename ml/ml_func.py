@@ -58,10 +58,11 @@ def get_starting_recommendations(u_id):
     return recs
 
 
-def get_simm_recommendations(id, already_read):
+def get_simm_recommendations(uid):
     simm = get_simm_matrix()[id]
     if np.isclose(np.sum(simm), 0):
         raise ValueError("No such id")
+    already_read = db_helper.get_already_read(uid)
     simm[already_read] = 0.0
     recs = (-simm).argsort()[:5]
     for i in range(len(recs)):
