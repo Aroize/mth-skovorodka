@@ -348,7 +348,7 @@ class DBOpenHelper:
     def get_diff(self, p_id):
         cursor = self.db.cursor()
         try:
-            sql = "SELECT {} FROM paper_dif WHERE p_id=?"
+            sql = "SELECT diff FROM paper_dif WHERE p_id=?"
             result = cursor.execute(sql,(p_id,)).fetchone()
             return result
         finally:
