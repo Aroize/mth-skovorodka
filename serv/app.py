@@ -170,21 +170,26 @@ def getPaper():
     else:
         return jsonify({'msg': "No such file"}), 404
 
-@app.route('/paper.info', methods=['GET'])
-@cross_origin()
-def getPaperTitle():
-    p_id = request.args.get('p_id')
-    path = db_helper.get_paper_path(p_id)[0]
+def getPaperTitle(id):
+    path = db_helper.get_paper_path(id)[0]
     if path is not None:
         obj = path.split("/")
-        return jsonify({
+        return {
             "theme": obj[0],
             "label": obj[1],
             "title": obj[2],
-            "p_id": p_id
-            }), 200
-    else:
-        return jsonify({"msg": "Internal Error"}), 500
+            "p_id": id
+            }
+    return None
+
+@app.route('/paper.info', methods=['GET'])
+@cross_origin()
+def getPapersTitles():
+    p_ids = request.args.get('p_ids').split(',')
+    result = []
+    for id in p_ids:
+        result.append(getPaperTitle(id))
+    return jsonify(result), 200
 
 
 @app.route('/data.getStartingRecommendations', methods=['GET'])
