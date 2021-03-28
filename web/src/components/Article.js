@@ -5,6 +5,7 @@ import ArticlesRec from './ArticlesRec';
 
 const Article = () => {
         const [article, setArticle] = useState("")
+        const [isStared, setIsStared] = useState(false)
 
         useEffect(() => {
           axios.get('https://raw.githubusercontent.com/sherlock-project/sherlock/master/README.md')
@@ -18,6 +19,7 @@ const Article = () => {
         return (
           <div>
           <div class="article">
+          <button class="star" onClick={() => setIsStared(!isStared)}>{isStared ? "+" : "-"}</button>
           <ReactMarkdown children={article}></ReactMarkdown>
           </div>
           <div class="rec-wrapper">
