@@ -1,4 +1,72 @@
+import os
+import pandas as pd
 import sqlite3
+
+def extract_themes_and_tags():
+	path = "./md/Word/"
+	themes = os.listdir(path)
+	paper_to_label = {}
+	label_to_theme = {}
+
+
+	labels_count = 0
+
+	for theme_id, theme in enumerate(themes, 0):
+		for label in os.listdir(os.path.join(path, theme)):
+			label_to_theme[labels_count] = theme_id
+
+
+			papers_path = os.path.join(path, theme, label)
+			for paper in os.listdir(papers_path):
+				csv_name = os.path.join(theme, label, paper) + ".docx"
+				csv_kek = os.path.join(theme, label, paper) + " .docx"
+				paper_to_label[csv_name] = labels_count
+				paper_to_label[csv_kek] = labels_count
+
+			labels_count += 1
+	
+	ids = pd.read_csv('ids.csv').values[:, :2]
+	paper_id_to_label_id = {}
+	for id, name in ids:
+		name = name.replace('й', 'й')
+		name = name.replace('Й', 'Й')
+		name = name.replace('ё', 'ё')
+		name = name.strip()
+		label_id = paper_to_label[name]
+		paper_id_to_label_id[id] = label_id
+
+	cursor = db_helper.db.cursor()
+	cursor.execute("""
+		DROP TABLE IF EXISTS paper_to_label
+		"""
+	)
+	cursor.execute("""
+		CREATE TABLE paper_to_label ( p_id INTEGER NOT NULL, l_id INTEGER NOT NULL )
+		"""
+	)
+	sql = "INSERT INTO paper_to_label ( p_id, l_id ) VALUES {}"
+	for row in paper_id_to_label_id.items():
+		cursor.execute(sql.format(row))
+
+	db_helper.db.commit()
+
+	cursor.execute("""
+		DROP TABLE IF EXISTS label_to_theme
+		"""
+	)
+	cursor.execute("""
+		CREATE TABLE label_to_theme ( l_id INTEGER NOT NULL, t_id INTEGER NOT NULL )
+		"""
+	)
+
+	sql = "INSERT INTO label_to_theme ( l_id, t_id ) VALUES {}"
+
+	for row in label_to_theme.items():
+		cursor.execute(sql.format(row))
+	db_helper.db.commit()
+
+	print("Themes are fetched")
+
 
 class User:
 
@@ -22,7 +90,7 @@ class User:
 class DBOpenHelper:
 
 	def __init__(self):
-		self.db = sqlite3.connect("skovorodka3.db")
+		self.db = sqlite3.connect("skovorodka_1_1.db")
 		cursor = self.db.cursor()
 		try:
 			cursor.execute("""
@@ -82,6 +150,14 @@ class DBOpenHelper:
 				)
 			    """
             )
+			cursor.execute("""
+            	CREATE TABLE IF NOT EXISTS user_themes
+            	(
+            		u_id INTEGER NOT NULL,
+            		t_id INTEGER NOT NULL
+            	)
+            	"""
+        	)
 		except Exception as e:
 			print(e)
 			return None
@@ -179,7 +255,8 @@ class DBOpenHelper:
 			if user is not None:
 				return jsonify(user)
 			return None
-		except:
+		except Exception as e:
+			print(e)
 			return None
 		finally:
 			cursor.close()
@@ -187,7 +264,7 @@ class DBOpenHelper:
 	def add_user_to_friend(self,id):
 		cursor = self.db.cursor()
 		try:
-			sql = "SELECT *FROM users WHERE id=?"
+			sql = "SELECT * FROM users WHERE id=?"
 			name = cursor.execute(sql,(id,))
 			sql = "INSERT INTO friends(id, name) VALUES {}"
 			args = (id, name)
@@ -197,9 +274,22 @@ class DBOpenHelper:
 			return None
 		finally:
 			cursor.close()
-		
+
+	def user_pick_themes(self, uid, themes):
+		cursor = self.db.cursor()
+		try:
+			for t_id in themes:
+				sql = "INSERT INTO user_themes (uid, t_id) VALUES {}"
+				args = (uid, t_id)
+				cursor.execute(sql.format(args))
+				cursor.db.commit()
+			return True
+		except Exception as e:
+			print(e)
+			return None
 			
 
 
 db_helper = DBOpenHelper()
 
+extract_themes_and_tags()

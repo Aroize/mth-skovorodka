@@ -100,7 +100,7 @@ def faveAdd():
     if result is not None:
         if result:
             code = 200
-            request["response"] = 1
+            response["response"] = 0
         else:
             code = 409
             response["msg"] = "Already in favs"
@@ -120,7 +120,7 @@ def faveRemove():
     if result is not None:
         if result:
             code = 200
-            request["response"] = 1
+            response["response"] = 0
         else:
             code = 404
             response["msg"] = "Not in favs"
@@ -130,8 +130,22 @@ def faveRemove():
     return jsonify(response), code
 
 
+@app.route('/user.pickThemes', methods=['POST', 'GET'])
+def pickThemes():
+    uid = request.args.get('uid')
+    themes = request.args.get('themes').split(',')
+    result = db_helper.user_pick_themes(uid, themes)
+    response = {}
+    code = 0
+    if result is not None:
+        code = 200
+        response["response"] = 0
+    else:
+        code = 500
+        response["mgs"] = "Internal Error"
+    return jsonify(response), code
+
 
 if __name__ == '__main__':
-
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)

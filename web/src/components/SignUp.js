@@ -13,50 +13,54 @@ const SignUp = () => {
         }
       }
     >
-      <Form>
+      <Form class="signup-form">
+        <div class="header">
         <p>Name:</p>
-        <Field name="name" type="text" placeholder="" />
+        <Field class="label" name="name" type="text" placeholder="" />
         <p>Surname:</p>
-        <Field name="surname" type="text" placeholder="" />
+        <Field class="label" name="surname" type="text" placeholder="" />
         <p>E-mail:</p>
-        <Field name="email" type="email" placeholder="" />
+        <Field class="label" name="email" type="email" placeholder="" />
         <p>Password:</p>
-        <Field name="password" type="password" placeholder="" />
+        <Field class="label" name="password" type="password" placeholder="" />
         <p>Age:</p>
-        <Field name="age" type="number" placeholder="" />
+        <Field class="label" name="age" type="number" placeholder="" />
+        </div>
+        <div class="box">
         <label>
-          <Field type="checkbox" name="themes" value="university" /> Вселенная
+          <Field type="checkbox" class="checkbox" name="themes" value="university" /> Вселенная
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="move" /> Движение
+          <Field type="checkbox" class="checkbox" name="themes" value="move" /> Движение
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="live" /> Жизнь
+          <Field type="checkbox" class="checkbox" name="themes" value="live" /> Жизнь
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="materials" /> Материалы
+          <Field type="checkbox" class="checkbox" name="themes" value="materials" /> Материалы
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="matter" /> Материя
+          <Field type="checkbox" class="checkbox" name="themes" value="matter" /> Материя
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="brain" /> Мозг
+          <Field type="checkbox" class="checkbox" name="themes" value="brain" /> Мозг
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="science" /> Наука
+          <Field type="checkbox" class="checkbox" name="themes" value="science" /> Наука
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="energy" /> Энергия
+          <Field type="checkbox" class="checkbox" name="themes" value="energy" /> Энергия
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="language" /> Язык и коммуникация
+          <Field type="checkbox" class="checkbox" name="themes" value="language" /> Коммуникация
         </label>
         <label>
-          <Field type="checkbox" name="themes" value="it" /> IT
+          <Field type="checkbox" class="checkbox" name="themes" value="it" /> IT
         </label>
+        </div>
         <p></p>
         <button type="submit">Submit</button>
-      </Form>
+      </Form>  
     </Formik>
   )
 }
