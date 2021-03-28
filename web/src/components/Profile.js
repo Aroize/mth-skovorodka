@@ -17,8 +17,8 @@ Tags:
                 }
                 </div>
                 <div class= "ways">
-                    <button class = "A">Маршрут А</button>
-                    <button class = "B">  Маршрут Б</button>
+                    <button class = "A"><a href="http://localhost">Маршрут А</a></button>
+                    <button class = "B">Маршрут Б</button>
                     <button class = "C">Маршрут В</button>
                     <button class = "D">Маршрут Г</button>
                 </div>

@@ -14,7 +14,8 @@ const SignUp = () => {
           .then((resp) => { 
             console.log(resp)
             if (resp.statusText === 200) {
-              axios.post(`https://stark-chamber-07526.herokuapp.com/user.pickThemes?uid=${resp.result.id}}&themes=${values.toString()}`)
+              console.log(resp.data.result.id)
+              axios.post(`https://stark-chamber-07526.herokuapp.com/user.pickThemes?uid=${resp.data.result.id}}&themes=${values.toString()}`)
               .then((res) => { 
                 console.log(res)
               })  

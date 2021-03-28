@@ -205,6 +205,11 @@ button:hover {
   background: linear-gradient(90deg, #92fe9d, #00c9ff);
 }
 
+button a {
+  text-decoration: none;
+  color: #E1E8ED;
+}
+
 .towards-wrapper {
   display: -ms-grid;
   display: grid;

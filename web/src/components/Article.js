@@ -5,7 +5,7 @@ import ArticlesRec from './ArticlesRec';
 
 const Article = () => {
         const [article, setArticle] = useState("")
-        const [rec, setRec] = useState({})
+        const [rec, setRec] = useState([])
         const [isStared, setIsStared] = useState(false)
 
         useEffect(() => {
@@ -30,16 +30,16 @@ const Article = () => {
         // useEffect(() => {
         //   let headers = new Headers()
         //   headers.append('Access-Control-Allow-Origin', 'http://localhost:3000');
-        //   axios.get('https://stark-chamber-07526.herokuapp.com/data.getStartingReommendations')
+        //   axios.get('https://stark-chamber-07526.herokuapp.com/data.getStartingRecommendations?uid=1')
         //   .then(resp => { console.log(resp)
-        //     axios.get(resp.data).then(res => setArticle(res.data))
+        //     // axios.get(resp.data).then(res => setArticle(res.data))
         //     // setArticle(resp.data.toString())
         //     // console.log(resp)
         //   })
         //   .catch( (error) => {
         //     console.log(error);
         //   });  
-        // }, [article])
+        // }, [rec])
       
       
         return (
@@ -49,7 +49,7 @@ const Article = () => {
           <ReactMarkdown children={article}></ReactMarkdown>
           </div>
           <div class="rec-wrapper">
-          <ArticlesRec/>
+          <ArticlesRec rec={rec}/>
           </div>
           </div>
           );
