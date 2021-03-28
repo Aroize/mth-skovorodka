@@ -5,12 +5,12 @@ import time
 
 from ml_func import get_starting_recommendations, get_simm_recommendations
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 cors = CORS(app)
 
 
 @app.route('/user.auth', methods=['GET'])
-@cross_origin
+@cross_origin()
 def auth():
     email = request.args.get('email')
     pwd = request.args.get('pwd')
@@ -31,7 +31,7 @@ def auth():
 
 
 @app.route('/user.register', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def register():
     email = request.args.get('email')
 
@@ -62,7 +62,7 @@ def register():
 
 
 @app.route('/stat.click', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def paperClicked():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -81,7 +81,7 @@ def paperClicked():
 
 
 @app.route('/stat.close', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def paperLeft():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -100,7 +100,7 @@ def paperLeft():
 
 
 @app.route('/fave.add', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def faveAdd():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -121,7 +121,7 @@ def faveAdd():
 
 
 @app.route('/fave.remove', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def faveRemove():
     uid = request.args.get('uid')
     p_id = request.args.get('p_id')
@@ -142,7 +142,7 @@ def faveRemove():
 
 
 @app.route('/user.pickThemes', methods=['POST', 'GET'])
-@cross_origin
+@cross_origin()
 def pickThemes():
     uid = request.args.get('uid')
     themes = request.args.get('themes').split(',')
@@ -158,7 +158,7 @@ def pickThemes():
     return jsonify(response), code
 
 @app.route('/paper', methods=['GET'])
-@cross_origin
+@cross_origin()
 def getPaper():
     p_id = request.args.get('p_id')
     path = db_helper.get_paper_path(p_id)[0]
@@ -170,7 +170,7 @@ def getPaper():
         return jsonify({'msg': "No such file"}), 404
 
 @app.route('/data.getStartingRecommendations', methods=['GET'])
-@cross_origin
+@cross_origin()
 def getStartingRecommendations():
     uid = request.args.get('uid')
     result = get_starting_recommendations(uid)
@@ -186,7 +186,7 @@ def getStartingRecommendations():
 
 
 @app.route('/data.getSimmRecommendations', methods=['GET'])
-@cross_origin
+@cross_origin()
 def getSimmRecommendations():
     uid = request.args.get('uid')
     result = get_simm_recommendations(uid)
