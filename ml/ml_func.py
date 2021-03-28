@@ -9,14 +9,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from serv.database import db_helper
 
 
-def get_big_themes():
-    pass
-
-
-def get_small_themes(big_theme):
-    pass
-
-
 def _count_and_save_simm_matrix():
     elmo_embs = []
     for emb_path in sorted(glob("Elmo_npys/*.npy")):

@@ -205,6 +205,15 @@ class DBOpenHelper:
                   )
                   """
                            )
+            # Jojo code
+            cursor.execute("""
+                            CREATE TABLE IF NOT EXISTS already_read
+                            (
+                                u_id INTEGER NOT NULL,
+                                p_id INTEGER NOT NULL
+                            )
+                            """
+                           )
 
         except Exception as e:
             print(e)
@@ -375,6 +384,43 @@ class DBOpenHelper:
             sql = "SELECT diff FROM paper_dif WHERE p_id=?"
             result = cursor.execute(sql, (p_id,)).fetchone()
             return result
+        finally:
+            cursor.close()
+
+    def insert_already_read(self, u_id, p_id):
+        cursor = self.db.cursor()
+        try:
+            check_sql = "SELECT * FROM already_read WHERE u_id=? and p_id=?"
+            args = (u_id, p_id)
+            result = cursor.execute(check_sql, args).fetchall()
+            if len(result) == 0:
+                sql = "INSERT INTO already_read (u_id, p_id) VALUES {}"
+                cursor.execute(sql.format(args))
+                self.db.commit()
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(e)
+            return None
+        finally:
+            cursor.close()
+
+    def clicked_on_paper(self, u_id, p_id):
+        self.insert_already_read(u_id, p_id)
+        cursor = self.db.cursor()
+        try:
+            sql = "SELECT * FROM paper_to_label WHERE p_id=?"
+            args = (p_id,)
+            path = cursor.execute(sql, args).fetchall()
+            if len(path) != 0:
+                return path
+            else:
+                print("Could not find paper with id", p_id)
+                return None
+        except Exception as e:
+            print(e)
+            return None
         finally:
             cursor.close()
 
