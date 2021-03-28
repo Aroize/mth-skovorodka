@@ -33,49 +33,69 @@ def extract_themes_and_tags():
 
             papers_path = os.path.join(path, theme, label)
             for paper in os.listdir(papers_path):
+                rel_name = os.path.join(theme, label, paper)
                 csv_name = os.path.join(theme, label, paper) + ".docx"
                 csv_kek = os.path.join(theme, label, paper) + " .docx"
-                paper_to_label[csv_name] = labels_count
-                paper_to_label[csv_kek] = labels_count
-
+                paper_to_label[csv_name] = (labels_count, rel_name)
+                paper_to_label[csv_kek] = (labels_count, rel_name)
             labels_count += 1
 
     ids = pd.read_csv('ids.csv').values
     paper_id_to_dif = {}
     paper_id_to_label_id = {}
+    paper_id_to_rel_path = {}
     for id, name, dif in ids:
         name = name.replace('й', 'й')
         name = name.replace('Й', 'Й')
         name = name.replace('ё', 'ё')
         name = name.strip()
-        label_id = paper_to_label[name]
+        label_id, rel_name = paper_to_label[name]
+        paper_id_to_rel_path[id] = rel_name
         paper_id_to_label_id[id] = label_id
         paper_id_to_dif[id] = dif
 
     cursor = db_helper.db.cursor()
 
-    cursor.execute("""
-    	DROP TABLE IF EXISTS paper_dif
-    	""")
 
     cursor.execute("""
-    	CREATE TABLE paper_dif ( p_id INTEGER NOT NULL, diff FLOAT NOT NULL )
-    	""")
+        DROP TABLE IF EXISTS papers
+        """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS papers
+        (
+            id INTEGER PRIMARY KEY,
+            p_path STRING NOT NULL
+        )
+        """
+    )
+    sql = "INSERT INTO papers ( id, p_path ) VALUES {}"
+    for row in paper_id_to_rel_path.items():
+        cursor.execute(sql.format(row))
+    db_helper.db.commit()
+
+    cursor.execute("""
+        DROP TABLE IF EXISTS paper_dif
+    """)
+
+    cursor.execute("""
+        CREATE TABLE paper_dif ( p_id INTEGER NOT NULL, diff FLOAT NOT NULL )
+        """)
     sql = "INSERT INTO paper_dif ( p_id, diff ) VALUES {}"
     for row in paper_id_to_dif.items():
-    	cursor.execute(sql.format(row))
+        cursor.execute(sql.format(row))
     db_helper.db.commit()
 
 
 
     cursor.execute("""
-		DROP TABLE IF EXISTS paper_to_label
-		"""
-                   )
+        DROP TABLE IF EXISTS paper_to_label
+        """
+    )
     cursor.execute("""
-		CREATE TABLE paper_to_label ( p_id INTEGER NOT NULL, l_id INTEGER NOT NULL )
-		"""
-                   )
+        CREATE TABLE paper_to_label ( p_id INTEGER NOT NULL, l_id INTEGER NOT NULL )
+    """
+    )
     sql = "INSERT INTO paper_to_label ( p_id, l_id ) VALUES {}"
     for row in paper_id_to_label_id.items():
         cursor.execute(sql.format(row))
@@ -83,13 +103,13 @@ def extract_themes_and_tags():
     db_helper.db.commit()
 
     cursor.execute("""
-		DROP TABLE IF EXISTS label_to_theme
-		"""
-                   )
+        DROP TABLE IF EXISTS label_to_theme
+    """
+    )
     cursor.execute("""
-		CREATE TABLE label_to_theme ( l_id INTEGER NOT NULL, t_id INTEGER NOT NULL )
-		"""
-                   )
+        CREATE TABLE label_to_theme ( l_id INTEGER NOT NULL, t_id INTEGER NOT NULL )
+    """
+    )
 
     sql = "INSERT INTO label_to_theme ( l_id, t_id ) VALUES {}"
 
@@ -135,14 +155,6 @@ class DBOpenHelper:
 					name STRING NOT NULL,
 					surname STRING NOT NULL,
 					age INTEGER NOT NULL
-				)
-				"""
-                           )
-            cursor.execute("""
-				CREATE TABLE IF NOT EXISTS papers
-				(
-					id INTEGER PRIMARY KEY AUTOINCREMENT,
-					path STRING NOT NULL
 				)
 				"""
                            )
@@ -367,17 +379,20 @@ class DBOpenHelper:
     		sql = "SELECT p_id FROM paper_dif WHERE diff - {} < 3 OR {} - diff < 3".format(r, r)
     		return cursor.execute(sql).fetchall()
     	except Exception as e:
-    		print(e)
-    		return None
-		finally:
-			cursor.close()
+            print(e)
+            return None
+    	finally:
+            cursor.close()
 
-    def get_diff(self, p_id):
+    def get_paper_path(self, p_id):
         cursor = self.db.cursor()
         try:
-            sql = "SELECT diff FROM paper_dif WHERE p_id=?"
-            result = cursor.execute(sql,(p_id,)).fetchone()
-            return result
+            sql = "SELECT p_path FROM papers WHERE id = ?"
+            path = cursor.execute(sql, (p_id, )).fetchone()
+            return path
+        except Exception as e:
+            print(e)
+            return None
         finally:
             cursor.close()
 

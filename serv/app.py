@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, send_from_directory
 from database import *
 import time
 app = Flask(__name__)
@@ -144,6 +144,17 @@ def pickThemes():
         code = 500
         response["mgs"] = "Internal Error"
     return jsonify(response), code
+
+@app.route('/paper', methods=['GET'])
+def getPaper():
+    p_id = request.args.get('p_id')
+    path = db_helper.get_paper_path(p_id)[0]
+    path.replace(" ", "%20")
+    bruh = "https://raw.githubusercontent.com/Aroize/mth-skovorodka/master/serv/md/Word/{}".format(path)
+    if path is not None:
+        return bruh, 200
+    else:
+        return jsonify({'msg': "No such file"}), 404
 
 
 if __name__ == '__main__':
